@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useTransition } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import {
   Trophy,
   Users,
@@ -162,6 +163,15 @@ export default function Home() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-3">
+            <Link
+              href="/sandbox"
+              className="text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all flex items-center gap-1.5 shadow-sm bg-slate-800/80 text-teal-400 border-teal-500/40 hover:bg-slate-700/80"
+              title="Game Simulation Sandbox"
+            >
+              <Swords className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Sandbox</span>
+            </Link>
+
             {/* Mascot Toggle Button */}
             <button
               onClick={() => setShowMascotsGlobal(!showMascotsGlobal)}
