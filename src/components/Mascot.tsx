@@ -590,17 +590,17 @@ function RefSpriteRenderer({ emotion }: { emotion: string }) {
   const isTaunting = emotion === "taunting";
   const isSad = ["sad", "trailing"].includes(emotion);
 
-  // Authentic Sleeper Fish Ref with multi-frame animated states
-  let spriteSrc = "/mascots/fish_ref/fish_ref_idle.gif";
-  if (isVictory) spriteSrc = "/mascots/fish_ref/fish_ref_action.gif";
-  else if (isTaunting) spriteSrc = "/mascots/fish_ref/fish_ref_action.gif";
-  else if (isSad) spriteSrc = "/mascots/fish_ref/fish_ref_2.png";
+  // Official Sleeper Ref with high-expression animated states
+  let spriteSrc = "/mascots/ref/ref_idle.gif";
+  if (isVictory) spriteSrc = "/mascots/ref/ref_victory.gif";
+  else if (isTaunting) spriteSrc = "/mascots/ref/ref_review.gif";
+  else if (isSad) spriteSrc = "/mascots/ref/ref_flag.gif";
 
   return (
     <div className="w-full h-full relative flex items-center justify-center">
       <img
         src={spriteSrc}
-        alt="The Fish Ref"
+        alt="The Ref"
         className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transition-all duration-200"
       />
     </div>

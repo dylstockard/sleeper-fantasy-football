@@ -846,8 +846,8 @@ export default function Home() {
                       },
                       {
                         id: "ref",
-                        name: "The Fish Ref",
-                        desc: "Official Sleeper referee goldfish with striped cap, whistle, penalty flag & TD signals.",
+                        name: "The Ref",
+                        desc: "Official Sleeper referee fish with striped jersey, headset mic, angry penalty flag toss & hype TD celebration.",
                       },
                       {
                         id: "fish",
@@ -904,20 +904,20 @@ export default function Home() {
                   </div>
 
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                    {/* Card 1: The Fish Ref */}
+                    {/* Card 1: The Official Sleeper Ref */}
                     <div className="bg-[#0b1426] rounded-xl border border-[#1a2c4e] p-5 flex flex-col items-center">
                       <div className="w-full flex items-center justify-between mb-3">
                         <span className="font-bold text-white text-sm flex items-center gap-2">
-                          🏁 The Fish Ref
+                          🏁 Official Sleeper Ref
                         </span>
                         <span className="text-[10px] font-mono text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded border border-teal-500/30">
-                          5-Frame Animated Loop
+                          5-Frame Emotive Loop
                         </span>
                       </div>
                       <div className="w-48 h-48 flex items-center justify-center bg-slate-900/50 rounded-xl border border-slate-800 p-2 mb-3">
                         <img
-                          src="/mascots/fish_ref/fish_ref_full.gif"
-                          alt="Fish Ref Full Loop"
+                          src="/mascots/ref/ref_full.gif"
+                          alt="Official Sleeper Ref Full Loop"
                           className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
                         />
                       </div>
@@ -925,8 +925,8 @@ export default function Home() {
                         <p className="text-[11px] text-slate-400 text-center mb-2 font-mono">Horizontal Sprite Sheet Strip:</p>
                         <div className="bg-slate-900/80 rounded-lg p-2 border border-slate-800 overflow-x-auto">
                           <img
-                            src="/mascots/fish_ref/fish_ref_strip.png"
-                            alt="Fish Ref Sprite Strip"
+                            src="/mascots/ref/ref_strip.png"
+                            alt="Ref Sprite Strip"
                             className="h-16 w-auto object-contain mx-auto"
                           />
                         </div>
