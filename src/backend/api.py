@@ -1,16 +1,25 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, BackgroundTasks
 from fastapi.middleware.cors import CORSMiddleware
 import sqlite3
 import os
 from typing import List, Optional
 from pydantic import BaseModel
 
+# Import our backend scripts
+import sys
+sys.path.append(os.path.dirname(__file__))
+from db import init_db
+from pipeline import run_pipeline
+
 app = FastAPI(title="Fantasy Football News API")
+
+# Auto-initialize database schema if it doesn't exist on Railway
+init_db()
 
 # Allow Next.js frontend to talk to this API
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:3000"],
+    allow_origins=["*"], # Relaxed for deployment
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -111,6 +120,14 @@ def get_user_feed(player_ids: Optional[str] = None):
         
     conn.close()
     return feed
+
+@app.post("/api/sync")
+def trigger_sync(background_tasks: BackgroundTasks):
+    """
+    Triggers the data pipeline to scrape new articles in the background.
+    """
+    background_tasks.add_task(run_pipeline)
+    return {"message": "Data pipeline sync started in the background."}
 
 if __name__ == "__main__":
     import uvicorn
