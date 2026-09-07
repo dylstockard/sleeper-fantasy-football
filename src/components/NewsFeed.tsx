@@ -23,9 +23,10 @@ export function NewsFeed() {
     setLoading(true);
     setError(null);
     try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
       const endpoint = playerId 
-        ? `http://localhost:8000/api/players/${playerId}/news`
-        : `http://localhost:8000/api/feed`;
+        ? `${baseUrl}/api/players/${playerId}/news`
+        : `${baseUrl}/api/feed`;
       
       const res = await fetch(endpoint);
       if (!res.ok) throw new Error("Failed to fetch news");
