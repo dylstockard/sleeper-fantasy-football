@@ -846,8 +846,13 @@ export default function Home() {
                       },
                       {
                         id: "ref",
-                        name: "The Ref",
-                        desc: "Whistle blower armed with yellow flags and official rulings.",
+                        name: "The Fish Ref",
+                        desc: "Official Sleeper referee goldfish with striped cap, whistle, penalty flag & TD signals.",
+                      },
+                      {
+                        id: "fish",
+                        name: "Sleeper Goldfish",
+                        desc: "Classic deadpan Sleeper goldfish with genuine multi-frame bubble and fin animations.",
                       },
                       {
                         id: "titan-up",
@@ -879,6 +884,83 @@ export default function Home() {
                         <p className="text-xs text-slate-400 leading-relaxed">{m.desc}</p>
                       </div>
                     ))}
+                  </div>
+                </div>
+
+                {/* Authentic 2D Sprite Animation Showcase */}
+                <div className="bg-[#101b33] rounded-2xl border border-purple-500/40 p-6 shadow-lg">
+                  <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 mb-4 pb-4 border-b border-[#1e3258]">
+                    <div>
+                      <span className="text-[10px] font-mono font-bold uppercase tracking-widest px-2.5 py-0.5 rounded bg-purple-500/20 text-purple-300 border border-purple-500/30">
+                        Official Sleeper Art Style
+                      </span>
+                      <h3 className="text-lg font-bold text-white mt-1">
+                        Multi-Frame Animation Studio
+                      </h3>
+                      <p className="text-xs text-slate-400">
+                        Faithfully reconstructed from original Sleeper mascot vector artwork with multi-frame animated states.
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {/* Card 1: The Fish Ref */}
+                    <div className="bg-[#0b1426] rounded-xl border border-[#1a2c4e] p-5 flex flex-col items-center">
+                      <div className="w-full flex items-center justify-between mb-3">
+                        <span className="font-bold text-white text-sm flex items-center gap-2">
+                          🏁 The Fish Ref
+                        </span>
+                        <span className="text-[10px] font-mono text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded border border-teal-500/30">
+                          5-Frame Animated Loop
+                        </span>
+                      </div>
+                      <div className="w-48 h-48 flex items-center justify-center bg-slate-900/50 rounded-xl border border-slate-800 p-2 mb-3">
+                        <img
+                          src="/mascots/fish_ref/fish_ref_full.gif"
+                          alt="Fish Ref Full Loop"
+                          className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                        />
+                      </div>
+                      <div className="w-full">
+                        <p className="text-[11px] text-slate-400 text-center mb-2 font-mono">Horizontal Sprite Sheet Strip:</p>
+                        <div className="bg-slate-900/80 rounded-lg p-2 border border-slate-800 overflow-x-auto">
+                          <img
+                            src="/mascots/fish_ref/fish_ref_strip.png"
+                            alt="Fish Ref Sprite Strip"
+                            className="h-16 w-auto object-contain mx-auto"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Card 2: Classic Goldfish */}
+                    <div className="bg-[#0b1426] rounded-xl border border-[#1a2c4e] p-5 flex flex-col items-center">
+                      <div className="w-full flex items-center justify-between mb-3">
+                        <span className="font-bold text-white text-sm flex items-center gap-2">
+                          🐟 Sleeper Goldfish
+                        </span>
+                        <span className="text-[10px] font-mono text-teal-400 bg-teal-950/60 px-2 py-0.5 rounded border border-teal-500/30">
+                          5-Frame Animated Loop
+                        </span>
+                      </div>
+                      <div className="w-48 h-48 flex items-center justify-center bg-slate-900/50 rounded-xl border border-slate-800 p-2 mb-3">
+                        <img
+                          src="/mascots/fish/fish_full.gif"
+                          alt="Sleeper Goldfish Full Loop"
+                          className="w-full h-full object-contain filter drop-shadow-[0_4px_12px_rgba(0,0,0,0.5)]"
+                        />
+                      </div>
+                      <div className="w-full">
+                        <p className="text-[11px] text-slate-400 text-center mb-2 font-mono">Horizontal Sprite Sheet Strip:</p>
+                        <div className="bg-slate-900/80 rounded-lg p-2 border border-slate-800 overflow-x-auto">
+                          <img
+                            src="/mascots/fish/fish_strip.png"
+                            alt="Goldfish Sprite Strip"
+                            className="h-16 w-auto object-contain mx-auto"
+                          />
+                        </div>
+                      </div>
+                    </div>
                   </div>
                 </div>
 

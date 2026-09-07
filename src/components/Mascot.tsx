@@ -10,6 +10,8 @@ export type MascotType =
   | "mr-hollywood"
   | "frog-fu"
   | "ref"
+  | "fish"
+  | "goldfish"
   | "titan-up"
   | "trex";
 
@@ -79,10 +81,24 @@ const mascotQuotes: Record<string, Record<string, string>> = {
   },
   ref: {
     victory: "Touchdown confirmed! 🏁🙌",
-    dancing: "Whistle blowing! 🎵",
+    dancing: "TOOT! Whistle blow! 🎵",
     taunting: "Unsportsmanlike blowout! 🟨",
     sad: "Flag on the play... 🏳️",
     idle: "Under review 🧐",
+  },
+  fish: {
+    victory: "Making waves! 🐟🌊",
+    dancing: "Just keep swimming! 🎵",
+    taunting: "You're small fry! 🐡",
+    sad: "Out of water... 🫧",
+    idle: "Blub blub... 🐠",
+  },
+  goldfish: {
+    victory: "Making waves! 🐟🌊",
+    dancing: "Just keep swimming! 🎵",
+    taunting: "You're small fry! 🐡",
+    sad: "Out of water... 🫧",
+    idle: "Blub blub... 🐠",
   },
   "titan-up": {
     victory: "TITAN UP! ⚔️⚡",
@@ -110,6 +126,7 @@ export function Mascot({
   className = "",
 }: MascotProps) {
   // Normalize mascot type
+  const checkType = type === "goldfish" ? "fish" : type;
   const normalizedType: MascotType = [
     "taco",
     "sharky-dududu",
@@ -118,10 +135,11 @@ export function Mascot({
     "mr-hollywood",
     "frog-fu",
     "ref",
+    "fish",
     "titan-up",
     "trex",
-  ].includes(type)
-    ? (type as MascotType)
+  ].includes(checkType)
+    ? (checkType as MascotType)
     : "taco";
 
   // Normalize emotion
@@ -204,6 +222,7 @@ export function Mascot({
         {normalizedType === "mr-hollywood" && <MrHollywoodSvg emotion={emotion} />}
         {normalizedType === "frog-fu" && <FrogFuSvg emotion={emotion} />}
         {normalizedType === "ref" && <RefSpriteRenderer emotion={emotion} />}
+        {normalizedType === "fish" && <FishSpriteRenderer emotion={emotion} />}
         {normalizedType === "titan-up" && <TitanUpSvg emotion={emotion} />}
         {normalizedType === "trex" && <TrexSvg emotion={emotion} />}
       </div>
@@ -571,18 +590,40 @@ function RefSpriteRenderer({ emotion }: { emotion: string }) {
   const isTaunting = emotion === "taunting";
   const isSad = ["sad", "trailing"].includes(emotion);
 
-  // Moving Street Fighter sprite animation for idle, with dynamic keyframe action states
-  let spriteSrc = "/mascots/ref_sf/ref_idle.gif";
-  if (isVictory) spriteSrc = "/mascots/ref/touchdown.png";
-  else if (isTaunting) spriteSrc = "/mascots/ref/whistle.png";
-  else if (isSad) spriteSrc = "/mascots/ref/flag.png";
+  // Authentic Sleeper Fish Ref with multi-frame animated states
+  let spriteSrc = "/mascots/fish_ref/fish_ref_idle.gif";
+  if (isVictory) spriteSrc = "/mascots/fish_ref/fish_ref_action.gif";
+  else if (isTaunting) spriteSrc = "/mascots/fish_ref/fish_ref_action.gif";
+  else if (isSad) spriteSrc = "/mascots/fish_ref/fish_ref_2.png";
 
   return (
     <div className="w-full h-full relative flex items-center justify-center">
       <img
         src={spriteSrc}
-        alt="The Ref"
-        className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.6)] transition-all duration-200"
+        alt="The Fish Ref"
+        className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transition-all duration-200"
+      />
+    </div>
+  );
+}
+
+function FishSpriteRenderer({ emotion }: { emotion: string }) {
+  const isVictory = ["victory", "dancing", "action_joy", "action_joy02"].includes(emotion);
+  const isTaunting = emotion === "taunting";
+  const isSad = ["sad", "trailing"].includes(emotion);
+
+  // Authentic Sleeper Goldfish with multi-frame animations
+  let spriteSrc = "/mascots/fish/fish_idle.gif";
+  if (isVictory) spriteSrc = "/mascots/fish/fish_action.gif";
+  else if (isTaunting) spriteSrc = "/mascots/fish/fish_2.png";
+  else if (isSad) spriteSrc = "/mascots/fish/fish_0.png";
+
+  return (
+    <div className="w-full h-full relative flex items-center justify-center">
+      <img
+        src={spriteSrc}
+        alt="Sleeper Goldfish"
+        className="w-full h-full object-contain filter drop-shadow-[0_8px_16px_rgba(0,0,0,0.5)] transition-all duration-200"
       />
     </div>
   );
