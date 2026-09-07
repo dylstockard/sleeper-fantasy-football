@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { Flame, ExternalLink, ArrowRight, TrendingUp, TrendingDown, Minus } from "lucide-react";
+import React, { useState, useEffect } from "react";
+import { ExternalLink, Clock, TrendingUp, AlertCircle, Newspaper } from "lucide-react";
 
 interface NewsItem {
   item_id: number;
@@ -7,34 +7,41 @@ interface NewsItem {
   url: string;
   published_at: string;
   source_name: string;
-  player_id: string;
-  player_name: string;
-  sentiment_score: number | null;
-  sentiment_label: string | null;
+  player_id?: string;
+  player_name?: string;
 }
 
-export function NewsFeed() {
+interface NewsFeedProps {
+  playerId?: string;
+  rosterIds?: string[]; // Added roster filter support
+}
+
+export function NewsFeed({ playerId, rosterIds }: NewsFeedProps) {
   const [feed, setFeed] = useState<NewsItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [selectedPlayer, setSelectedPlayer] = useState<string | null>(null);
 
-  const fetchFeed = async (playerId?: string) => {
+  const fetchFeed = async (specificPlayerId?: string) => {
     setLoading(true);
     setError(null);
     try {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000";
-      const endpoint = playerId 
-        ? `${baseUrl}/api/players/${playerId}/news`
-        : `${baseUrl}/api/feed`;
+      
+      let endpoint = `${baseUrl}/api/feed`;
+      
+      if (specificPlayerId) {
+        endpoint = `${baseUrl}/api/players/${specificPlayerId}/news`;
+      } else if (rosterIds && rosterIds.length > 0) {
+        // Pass rosterIds as comma separated list to global feed
+        endpoint = `${baseUrl}/api/feed?player_ids=${rosterIds.join(",")}`;
+      }
       
       const res = await fetch(endpoint);
       if (!res.ok) throw new Error("Failed to fetch news");
       
       const data = await res.json();
       
-      // If fetching for a specific player, the response has a `news` array
-      if (playerId) {
+      if (specificPlayerId) {
         setFeed(data.news.map((item: any) => ({
           ...item,
           player_id: data.player_id,
@@ -44,101 +51,98 @@ export function NewsFeed() {
         setFeed(data);
       }
     } catch (err: any) {
-      setError(err.message);
+      setError(err.message || "An error occurred");
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchFeed(selectedPlayer || undefined);
-  }, [selectedPlayer]);
+    fetchFeed(playerId);
+  }, [playerId, rosterIds]);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-48">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-teal-400"></div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="bg-red-500/10 border border-red-500/20 rounded-xl p-6 text-center text-red-400">
+        <AlertCircle className="w-8 h-8 mx-auto mb-2 opacity-50" />
+        <p>{error}</p>
+      </div>
+    );
+  }
+
+  if (feed.length === 0) {
+    return (
+      <div className="bg-[#101b33] border border-[#1e3258] rounded-xl p-10 text-center text-slate-400">
+        <Newspaper className="w-10 h-10 mx-auto mb-3 opacity-20" />
+        <p className="text-lg font-medium text-slate-300">No news found</p>
+        <p className="text-sm mt-1">Check back later for updates</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h2 className="text-xl font-bold text-white flex items-center gap-2">
-          <Flame className="w-5 h-5 text-orange-500" />
-          {selectedPlayer ? "Player Specific News" : "Global Fantasy News"}
-        </h2>
-        {selectedPlayer && (
-          <button 
-            onClick={() => setSelectedPlayer(null)}
-            className="text-xs bg-slate-800 hover:bg-slate-700 text-slate-300 px-3 py-1.5 rounded-lg border border-slate-700 transition"
-          >
-            Clear Filter
-          </button>
-        )}
-      </div>
-
-      {loading ? (
-        <div className="py-20 text-center">
-          <div className="w-8 h-8 border-4 border-orange-500 border-t-transparent rounded-full animate-spin mx-auto mb-2"></div>
-          <p className="text-sm text-slate-400">Loading latest news...</p>
-        </div>
-      ) : error ? (
-        <div className="bg-red-500/10 border border-red-500/30 rounded-xl p-6 text-center text-red-200">
-          <p>{error}</p>
-          <p className="text-xs mt-2 opacity-70">Make sure the Python backend is running on port 8000.</p>
-        </div>
-      ) : feed.length === 0 ? (
-        <div className="bg-[#101b33] border border-[#1e3258] rounded-xl p-10 text-center text-slate-400">
-          No news items found.
-        </div>
-      ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          {feed.map((item) => {
-            const isPos = item.sentiment_label === "POSITIVE";
-            const isNeg = item.sentiment_label === "NEGATIVE";
-            const isNeu = item.sentiment_label === "NEUTRAL";
-            
-            return (
-              <div key={`${item.item_id}-${item.player_id}`} className="bg-[#101b33] border border-[#1e3258] rounded-xl p-4 flex flex-col justify-between hover:border-teal-500/30 transition-colors shadow-lg">
-                <div>
-                  <div className="flex justify-between items-start mb-3">
-                    <button 
-                      onClick={() => setSelectedPlayer(item.player_id)}
-                      className="text-sm font-bold text-teal-300 hover:text-teal-200 hover:underline inline-flex items-center gap-1"
-                    >
-                      {item.player_name}
-                      <ArrowRight className="w-3 h-3 opacity-50" />
-                    </button>
-                    
-                    {item.sentiment_label && (
-                      <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full flex items-center gap-1 border ${
-                        isPos ? "bg-green-500/10 text-green-400 border-green-500/20" :
-                        isNeg ? "bg-red-500/10 text-red-400 border-red-500/20" :
-                        "bg-slate-500/10 text-slate-400 border-slate-500/20"
-                      }`}>
-                        {isPos ? <TrendingUp className="w-3 h-3" /> :
-                         isNeg ? <TrendingDown className="w-3 h-3" /> :
-                         <Minus className="w-3 h-3" />}
-                        {item.sentiment_label}
-                      </span>
+    <div className="space-y-4">
+      {feed.map((item) => (
+        <a 
+          key={item.item_id} 
+          href={item.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block bg-[#101b33] hover:bg-[#152342] transition-colors rounded-2xl border border-[#1e3258] overflow-hidden"
+        >
+          <div className="p-5 flex gap-4 items-start">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 text-xs font-semibold mb-2">
+                <span className="text-slate-400 flex items-center gap-1">
+                  <Newspaper className="w-3.5 h-3.5" />
+                  {item.source_name}
+                </span>
+                <span className="text-[#1e3258]">•</span>
+                <span className="text-slate-500 flex items-center gap-1">
+                  <Clock className="w-3.5 h-3.5" />
+                  {new Date(item.published_at).toLocaleDateString(undefined, {
+                    month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit'
+                  })}
+                </span>
+              </div>
+              
+              <h3 className="text-slate-100 font-bold text-base leading-snug mb-3 pr-4 group-hover:text-teal-400 transition-colors">
+                {item.title}
+              </h3>
+              
+              <div className="flex items-center justify-between mt-4 pt-4 border-t border-[#18294a]">
+                <div className="flex items-center gap-2">
+                  <div className="w-6 h-6 rounded-full bg-slate-700/50 flex items-center justify-center border border-slate-600/50 overflow-hidden">
+                    {item.player_id ? (
+                      <img 
+                        src={`https://sleepercdn.com/content/nfl/players/thumb/${item.player_id}.jpg`}
+                        alt=""
+                        className="w-full h-full object-cover"
+                        onError={(e) => (e.currentTarget.style.display = 'none')}
+                      />
+                    ) : (
+                      <TrendingUp className="w-3.5 h-3.5 text-slate-400" />
                     )}
                   </div>
-                  
-                  <h3 className="text-sm font-semibold text-white mb-2 line-clamp-3">
-                    {item.title}
-                  </h3>
+                  <span className="text-sm font-medium text-slate-300">
+                    {item.player_name || "General News"}
+                  </span>
                 </div>
                 
-                <div className="mt-4 pt-3 border-t border-[#1b2a47] flex justify-between items-center text-xs">
-                  <span className="text-slate-400 font-medium">{item.source_name}</span>
-                  <a 
-                    href={item.url} 
-                    target="_blank" 
-                    rel="noreferrer"
-                    className="text-teal-400 hover:text-teal-300 inline-flex items-center gap-1"
-                  >
-                    Read <ExternalLink className="w-3 h-3" />
-                  </a>
-                </div>
+                <ExternalLink className="w-4 h-4 text-slate-500 hover:text-teal-400" />
               </div>
-            );
-          })}
-        </div>
-      )}
+            </div>
+          </div>
+        </a>
+      ))}
     </div>
   );
 }

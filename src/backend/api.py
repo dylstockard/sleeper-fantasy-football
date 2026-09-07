@@ -76,13 +76,14 @@ def get_player_news(player_id: str):
     return PlayerNews(player_id=player_id, name=player['name'], news=news_list)
 
 @app.get("/api/feed")
-def get_user_feed():
+def get_user_feed(player_ids: Optional[str] = None):
     """
     Returns a global feed of all recent analyzed news.
-    In a real app, this would take a user_id and filter by their roster.
+    If player_ids is provided (comma separated), filters to only those players.
     """
     conn = get_db_connection()
-    cursor = conn.execute('''
+    
+    query = '''
         SELECT n.item_id, n.title, n.url, n.published_at, s.name as source_name,
                p.player_id, p.name as player_name,
                ps.sentiment_score, ps.sentiment_label
@@ -90,9 +91,19 @@ def get_user_feed():
         JOIN news_items n ON ps.item_id = n.item_id
         JOIN news_sources s ON n.source_id = s.source_id
         JOIN players p ON ps.player_id = p.player_id
-        ORDER BY n.published_at DESC
-        LIMIT 50
-    ''')
+    '''
+    
+    params = []
+    if player_ids:
+        pid_list = [pid.strip() for pid in player_ids.split(",") if pid.strip()]
+        if pid_list:
+            placeholders = ",".join("?" * len(pid_list))
+            query += f" WHERE ps.player_id IN ({placeholders})"
+            params.extend(pid_list)
+            
+    query += " ORDER BY n.published_at DESC LIMIT 50"
+    
+    cursor = conn.execute(query, params)
     
     feed = []
     for row in cursor.fetchall():

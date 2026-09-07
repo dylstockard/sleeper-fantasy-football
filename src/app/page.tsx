@@ -50,6 +50,7 @@ export default function Home() {
 
   // Matchups state
   const [selectedWeek, setSelectedWeek] = useState(1);
+  const [newsRosterFilter, setNewsRosterFilter] = useState<string[]>([]);
   const [matchupsLoading, setMatchupsLoading] = useState(false);
   const [matchups, setMatchups] = useState<SleeperMatchup[]>([]);
 
@@ -1165,7 +1166,33 @@ export default function Home() {
             
             {/* TAB: NEWS */}
             {activeTab === "news" && (
-              <NewsFeed />
+              <div className="space-y-6">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-[#101b33] p-4 rounded-xl border border-[#1e3258]">
+                  <div>
+                    <h3 className="text-white font-bold">Personalized News Feed</h3>
+                    <p className="text-xs text-slate-400">Filter the latest news by a specific team's active roster.</p>
+                  </div>
+                  <select 
+                    className="bg-[#18294a] text-sm text-slate-200 border border-[#233d6a] rounded-lg px-3 py-2 outline-none focus:border-teal-400"
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val) {
+                        const team = teams.find(t => t.rosterId === Number(val));
+                        setNewsRosterFilter(team?.players || []);
+                      } else {
+                        setNewsRosterFilter([]);
+                      }
+                    }}
+                  >
+                    <option value="">Global Feed (All Players)</option>
+                    {teams.map(t => (
+                      <option key={t.rosterId} value={t.rosterId}>{t.teamName}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <NewsFeed rosterIds={newsRosterFilter.length > 0 ? newsRosterFilter : undefined} />
+              </div>
             )}
           </>
         )}
