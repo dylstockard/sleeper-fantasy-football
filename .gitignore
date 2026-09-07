@@ -237,3 +237,4 @@ ENV/
 .env
 fantasy_news.db
 src/backend/__pycache__/
+tsconfig.tsbuildinfo
