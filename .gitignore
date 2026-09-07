@@ -216,3 +216,24 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Node & Next.js
+node_modules/
+/.next/
+/out/
+.env*.local
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# Jupyter & Python virtual environments
+.ipynb_checkpoints/
+.venv/
+venv/
+env/
+ENV/
+
+.env
+fantasy_news.db
+src/backend/__pycache__/
